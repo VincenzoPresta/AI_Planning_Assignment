@@ -6,7 +6,7 @@
     workstation location box content robot content_type carrier
     
     workstation box content agent - locable
-    box workstation carrier - container
+    box workstation - container
     content box - containable
     robot - agent
     volt current - content_type ; Definizione dei tipi di contenuto
@@ -23,8 +23,6 @@
         (is-type ?content - content ?content_type - content_type); Associa contenuti specifici ai loro tipi
 
         ;modifiche per istanza no. 2
-        (capacity ?carrier - carrier ? ?value - number)                   ;definizione capacità del carrier
-        (curr-carrier-load ?carrier - carrier ?value - number)            ;tiene traccia del numero CORRENTE di scatole sul carrier
         (carrier-has-box ?carrier - carrier ?box - box)                   ;true se carrier ha box
         (agent-has-carrier ?agent - agent ?carrier - carrier)             ;true se agent ha il carrier
     )
