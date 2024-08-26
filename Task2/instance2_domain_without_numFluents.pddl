@@ -1,6 +1,6 @@
-(define (domain task1domain)
+(define (domain task22domain)
 
-  (:requirements :strips :typing :universal-preconditions :disjunctive-preconditions :numeric-fluents)
+  (:requirements :strips :typing :disjunctive-preconditions)
 
   (:types
     workstation location box content robot content_type 
@@ -19,7 +19,6 @@
         (at ?objectLoc - locable ?location - location )
         (contain ?container - container ?containable - containable)
         (box-is-empty ?box - box)
-        ;(free ?agent - agent)
         (connected ?loc1 - location ?loc2 - location)
         (workstation-has-type ?workstation - workstation ?type - content_type) ; Indica di quale tipo di contenuto ha bisogno una workstation
         (is-type ?content - content ?content_type - content_type); Associa contenuti specifici ai loro tipi
@@ -129,7 +128,7 @@
                     (at ?workstation ?loc)
                     (contain ?workstation ?box)
                     (agent-has-carrier ?agent ?carrier)
-                    (carrier-has-slot ?carrier -carrier ?slot)
+                    (carrier-has-slot ?carrier ?slot)
                     (free ?slot)
         )
         :effect (and 
@@ -140,12 +139,12 @@
     )
 
     (:action pick-up-from-location
-        :parameters (?agent - agent ?carrier - carrier  ?box - box ?loc - location)
+        :parameters (?agent - agent ?carrier - carrier ?slot - slot ?box - box ?loc - location)
         :precondition (and 
                             (at ?agent ?loc)
                             (at ?box ?loc)
                             (agent-has-carrier ?agent ?carrier)
-                            (carrier-has-slot ?carrier -carrier ?slot)
+                            (carrier-has-slot ?carrier ?slot)
                             (free ?slot)
 
         )
