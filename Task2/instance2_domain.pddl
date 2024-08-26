@@ -50,6 +50,10 @@
     ; 9: la capacità del "carrier" deve essere "problem specific", quindi deve essere definita nel file del problema.                                                               ;DONE
     ;CHECK IF NUMBER IS USEFUL
 
+    (:functions
+    (curr-carrier-load ?carrier) ; funzione che restituisce un intero, rappresentante il carico corrente del carrier
+    )   
+
     (:action fill_box_from_location
         :parameters (?agent - agent ?box - box ?content - content ?loc - location )
         :precondition (and 
@@ -124,7 +128,7 @@
         )
     )
 
-    (:action pick-up-from-ws
+    (:action pick-up-from-ws-corrente
         :parameters (?agent - agent ?carrier - carrier ?maxCap - number ?currLoad - number ?box - box ?workstation - workstation ?loc - location)
         :precondition (and 
                         (at ?agent ?loc)
@@ -133,7 +137,7 @@
                         (free ?agent)
                         ;modifiche istanza no.2
                         (agent-has-carrier ?agent ?carrier)
-                        (not-full-carrier ?carrier)
+                        ;(not-full-carrier ?carrier)
                         (curr-carrier-load ?carrier currLoad)
                         (capacity ?carrier ?maxCap )
         )
@@ -143,9 +147,27 @@
                 ;(loaded ?agent ?box)
                 (carrier-has-box ?carrier ?box)
                 (not (curr-carrier-load ?carrier currLoad)) ;non è vero perché devo aumentarlo di 1
-                (curr-carrier-load ?carrier currLoad+1)            
+                (curr-carrier-load ?carrier currLoad+1)           
         )
     )
+
+    (:action pick-up-from-ws_vincenzo
+        :parameters (?agent - agent ?carrier - carrier ?box - box ?workstation - workstation ?loc - location)
+        :precondition (and 
+                    (at ?agent ?loc)
+                    (at ?workstation ?loc)
+                    (contain ?workstation ?box)
+                    (free ?agent)
+                    (agent-has-carrier ?agent ?carrier)
+                    (< (curr-carrier-load ?carrier) (capacity ?carrier)) ; verifica che ci sia spazio nel carrier, in particolare la precondizione fallisce se il carrier è già pieno, senza bisogno di un predicato booleano separato. 
+    )
+        :effect (and 
+            (not (free ?agent))
+            (carrier-has-box ?carrier ?box)
+            (not (contain ?workstation ?box))
+            (increase (curr-carrier-load ?carrier) 1)  ; aumenta il carico corrente del carrier di 1
+    )
+)
 
 
 )
