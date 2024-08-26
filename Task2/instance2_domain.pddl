@@ -1,6 +1,6 @@
 (define (domain task1domain)
 
-  (:requirements :strips :typing :universal-preconditions :disjunctive-preconditions)
+  (:requirements :strips :typing :universal-preconditions :disjunctive-preconditions :numeric-fluents)
 
   (:types
     workstation location box content robot content_type 
@@ -51,7 +51,8 @@
     ;CHECK IF NUMBER IS USEFUL
 
     (:functions
-    (curr-carrier-load ?carrier) ; funzione che restituisce un intero, rappresentante il carico corrente del carrier
+        (curr-carrier-load ?carrier - carrier) ; funzione che restituisce un intero, rappresentante il carico corrente del carrier
+        (capacity ?carrier - carrier ) ;funzione che restituisce un intero, rappresentante il carico corrente del carrier
     )   
 
     (:action fill_box_from_location
@@ -128,30 +129,7 @@
         )
     )
 
-    (:action pick-up-from-ws-corrente
-        :parameters (?agent - agent ?carrier - carrier ?maxCap - number ?currLoad - number ?box - box ?workstation - workstation ?loc - location)
-        :precondition (and 
-                        (at ?agent ?loc)
-                        (at ?workstation ?loc)
-                        (contain ?workstation ?box)
-                        (free ?agent)
-                        ;modifiche istanza no.2
-                        (agent-has-carrier ?agent ?carrier)
-                        ;(not-full-carrier ?carrier)
-                        (curr-carrier-load ?carrier currLoad)
-                        (capacity ?carrier ?maxCap )
-        )
-        :effect (and 
-                (not (free ?agent))
-                (not (contain ?workstation ?box))
-                ;(loaded ?agent ?box)
-                (carrier-has-box ?carrier ?box)
-                (not (curr-carrier-load ?carrier currLoad)) ;non è vero perché devo aumentarlo di 1
-                (curr-carrier-load ?carrier currLoad+1)           
-        )
-    )
-
-    (:action pick-up-from-ws_vincenzo
+    (:action pick-up-from-ws
         :parameters (?agent - agent ?carrier - carrier ?box - box ?workstation - workstation ?loc - location)
         :precondition (and 
                     (at ?agent ?loc)
@@ -160,14 +138,14 @@
                     (free ?agent)
                     (agent-has-carrier ?agent ?carrier)
                     (< (curr-carrier-load ?carrier) (capacity ?carrier)) ; verifica che ci sia spazio nel carrier, in particolare la precondizione fallisce se il carrier è già pieno, senza bisogno di un predicato booleano separato. 
-    )
+        )
         :effect (and 
             (not (free ?agent))
-            (carrier-has-box ?carrier ?box)
             (not (contain ?workstation ?box))
+            (carrier-has-box ?carrier ?box)
             (increase (curr-carrier-load ?carrier) 1)  ; aumenta il carico corrente del carrier di 1
-    )
-)
+        )
+    )  
 
 
 )
