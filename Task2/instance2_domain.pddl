@@ -135,7 +135,7 @@
                     (< (curr-carrier-load ?carrier) (capacity ?carrier)) ; verifica che ci sia spazio nel carrier, in particolare la precondizione fallisce se il carrier è già pieno, senza bisogno di un predicato booleano separato. 
         )
         :effect (and 
-            (not (free ?agent))
+            ;(not (free ?agent))
             (not (contain ?workstation ?box))
             (carrier-has-box ?carrier ?box)
             (increase (curr-carrier-load ?carrier) 1)  ; aumenta il carico corrente del carrier di 1
@@ -143,7 +143,7 @@
     )
 
     (:action pick-up-from-location
-        :parameters (?agent - agent ?box - box ?loc - location)
+        :parameters (?agent - agent ?carrier - carrier  ?box - box ?loc - location)
         :precondition (and 
                             (at ?agent ?loc)
                             (at ?box ?loc)
@@ -187,7 +187,7 @@
                     (not (carrier-has-box ?carrier ?box))
                     ;(free ?agent)
                     (contain ?workstation ?box)
-                    ((decrease (curr-carrier-load ?carrier) 1))
+                    (decrease (curr-carrier-load ?carrier) 1)
         )
     )
 
@@ -201,7 +201,7 @@
                     (not (carrier-has-box ?carrier ?box))
                     ;(free ?agent)
                     (at ?box ?loc)
-                    ((decrease (curr-carrier-load ?carrier) 1))
+                    (decrease (curr-carrier-load ?carrier) 1)
         )
     )
 
