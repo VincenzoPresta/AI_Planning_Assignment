@@ -3,38 +3,30 @@
   (:requirements :strips :typing :universal-preconditions :disjunctive-preconditions :numeric-fluents)
 
   (:types
-    workstation location box content robot content_type 
-    
-    carrier number
-    
-
+    workstation location box content robot content_type carrier
     
     workstation box content agent - locable
     box workstation carrier - container
     content box - containable
     robot - agent
     volt current - content_type ; Definizione dei tipi di contenuto
+    cart - carrier              ; carrier is generic, there can be more carrier type
   )
 
     (:predicates
         (at ?objectLoc - locable ?location - location )
         (contain ?container - container ?containable - containable)
         (box-is-empty ?box - box)
-        (free ?agent - agent)
-        (loaded ?agent - agent ?box - box)
+        ;(free ?agent - agent)
         (connected ?loc1 - location ?loc2 - location)
-        ;(content-type ?content - content ?type - content_type) 
         (workstation-has-type ?workstation - workstation ?type - content_type) ; Indica di quale tipo di contenuto ha bisogno una workstation
         (is-type ?content - content ?content_type - content_type); Associa contenuti specifici ai loro tipi
 
         ;modifiche per istanza no. 2
         (capacity ?carrier - carrier ? ?value - number)                   ;definizione capacità del carrier
-        (curr-carrier-load ?carrier - carrier ?value - number)            ;tiene traccia del numero CORRENTE di scatole sul carrier (richiesto dalla traccia)
-        (full-carrier ?carrier)                                           ;true se carrier pieno
-        (not-full-carrier ?carrier)                                       ;true se carrier ha almeno un posto vuoto
+        (curr-carrier-load ?carrier - carrier ?value - number)            ;tiene traccia del numero CORRENTE di scatole sul carrier
         (carrier-has-box ?carrier - carrier ?box - box)                   ;true se carrier ha box
         (agent-has-carrier ?agent - agent ?carrier - carrier)             ;true se agent ha il carrier
-
     )
 
 
@@ -48,12 +40,17 @@
     ; 7: diversi tipi di "carrier" 
     ; 8: per ogni agente bisogna contare e tenere traccia di: i) quali scatole sono sul suo "carrier" ii) quante scatole ci sono sul carrier (per non superare la capacità massima) ;DONE
     ; 9: la capacità del "carrier" deve essere "problem specific", quindi deve essere definita nel file del problema.                                                               ;DONE
-    ;CHECK IF NUMBER IS USEFUL
+
+
 
     (:functions
         (curr-carrier-load ?carrier - carrier) ; funzione che restituisce un intero, rappresentante il carico corrente del carrier
         (capacity ?carrier - carrier ) ;funzione che restituisce un intero, rappresentante il carico corrente del carrier
-    )   
+    )
+
+    ;l'assunzione fatta per l'istanza 1 : robot caricato con una scatola ha le "mani" occupate quindi non può eseguire empty e fill, cade in questo caso.
+    ;si suppone, visto l'utilizzo di un "carrier", che il robot può eseguire le operazioni di empty e fill
+    ;first try: eliminato il predicato free
 
     (:action fill_box_from_location
         :parameters (?agent - agent ?box - box ?content - content ?loc - location )
@@ -62,7 +59,7 @@
                         (at ?box ?loc)
                         (at ?content ?loc)
 
-                        (free ?agent)
+                        ;(free ?agent)
                         (box-is-empty ?box)
         )      
         :effect (and 
@@ -81,7 +78,7 @@
                         (contain ?workstation ?content)
                         (is-type ?content ?type)
 
-                        (free ?agent)
+                        ;(free ?agent)
                         (box-is-empty ?box)
         )                   
         :effect (and 
@@ -100,7 +97,7 @@
                             (or (at ?box ?loc) (contain ?workstation ?box))
                             (at ?workstation ?loc)
 
-                            (free ?agent)
+                            ;(free ?agent)
                             (contain ?box ?content)
                             (is-type ?content ?content_type)
         )
@@ -118,7 +115,7 @@
                             (at ?agent ?loc)
                             (at ?box ?loc) 
         
-                            (free ?agent)
+                            ;(free ?agent)
                             (contain ?box ?content)
         )
         :effect (and 
@@ -135,7 +132,7 @@
                     (at ?agent ?loc)
                     (at ?workstation ?loc)
                     (contain ?workstation ?box)
-                    (free ?agent)
+                    ;(free ?agent)
                     (agent-has-carrier ?agent ?carrier)
                     (< (curr-carrier-load ?carrier) (capacity ?carrier)) ; verifica che ci sia spazio nel carrier, in particolare la precondizione fallisce se il carrier è già pieno, senza bisogno di un predicato booleano separato. 
         )
@@ -145,8 +142,70 @@
             (carrier-has-box ?carrier ?box)
             (increase (curr-carrier-load ?carrier) 1)  ; aumenta il carico corrente del carrier di 1
         )
-    )  
+    )
 
+    (:action pick-up-from-location
+        :parameters (?agent - agent ?box - box ?loc - location)
+        :precondition (and 
+                            (at ?agent ?loc)
+                            (at ?box ?loc)
+                            ;(free ?agent)
+
+                            (agent-has-carrier ?agent ?carrier)
+                            (< (curr-carrier-load ?carrier) (capacity ?carrier))
+
+        )
+        :effect (and 
+                    ;(not (free ?agent))
+                    (not (at ?box ?loc))
+
+                    (carrier-has-box ?carrier ?box)
+                    (increase (curr-carrier-load ?carrier) 1)  ; aumenta il carico corrente del carrier di 1
+        )
+    )
+
+    (:action move
+        :parameters (?agent - agent ?loc1 - location ?loc2 - location)
+        :precondition (and 
+                        (or (connected ?loc1 ?loc2) (connected ?loc2 ?loc1))
+                        (at ?agent ?loc1)
+        )
+        :effect (and 
+                    (not (at ?agent ?loc1))
+                    (at ?agent ?loc2)
+        )
+    )
+
+    (:action deliver-to-ws
+        :parameters (?agent - agent ?carrier - carrier ?box - box ?workstation - workstation ?loc - location)
+        :precondition (and 
+                            (at ?agent ?loc)
+                            (at ?workstation ?loc)
+                            
+                            (agent-has-carrier ?agent ?carrier)
+                            (carrier-has-box ?carrier ?box)
+        )
+        :effect (and 
+                    (not (carrier-has-box ?carrier ?box))
+                    ;(free ?agent)
+                    (contain ?workstation ?box)
+                    ((decrease (curr-carrier-load ?carrier) 1))
+        )
+    )
+
+    (:action deliver-to-loc
+        :parameters (?agent - agent ?carrier - carrier ?box - box ?loc - location)
+        :precondition (and 
+                            (at ?agent ?loc)
+                            (carrier-has-box ?carrier ?box)
+        )
+        :effect (and 
+                    (not (carrier-has-box ?carrier ?box))
+                    ;(free ?agent)
+                    (at ?box ?loc)
+                    ((decrease (curr-carrier-load ?carrier) 1))
+        )
+    )
 
 )
 
