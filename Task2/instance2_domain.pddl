@@ -1,6 +1,6 @@
 (define (domain task1domain)
 
-    (:requirements :strips :typing :universal-preconditions :disjunctive-preconditions :numeric-fluents)
+    (:requirements :strips :typing :disjunctive-preconditions :numeric-fluents)
 
     (:types
     workstation location box content robot content_type carrier
@@ -131,12 +131,10 @@
                     (at ?agent ?loc)
                     (at ?workstation ?loc)
                     (contain ?workstation ?box)
-                    ;(free ?agent)
                     (agent-has-carrier ?agent ?carrier)
                     (< (curr-carrier-load ?carrier) (capacity ?carrier)) ; verifica che ci sia spazio nel carrier, in particolare la precondizione fallisce se il carrier è già pieno, senza bisogno di un predicato booleano separato. 
         )
         :effect (and 
-            ;(not (free ?agent))
             (not (contain ?workstation ?box))
             (carrier-has-box ?carrier ?box)
             (increase (curr-carrier-load ?carrier) 1)  ; aumenta il carico corrente del carrier di 1
@@ -148,16 +146,12 @@
         :precondition (and 
                             (at ?agent ?loc)
                             (at ?box ?loc)
-                            ;(free ?agent)
-
                             (agent-has-carrier ?agent ?carrier)
                             (< (curr-carrier-load ?carrier) (capacity ?carrier))
 
         )
         :effect (and 
-                    ;(not (free ?agent))
                     (not (at ?box ?loc))
-
                     (carrier-has-box ?carrier ?box)
                     (increase (curr-carrier-load ?carrier) 1)  ; aumenta il carico corrente del carrier di 1
         )
@@ -186,7 +180,6 @@
         )
         :effect (and 
                     (not (carrier-has-box ?carrier ?box))
-                    ;(free ?agent)
                     (contain ?workstation ?box)
                     (decrease (curr-carrier-load ?carrier) 1)
         )
@@ -200,7 +193,6 @@
         )
         :effect (and 
                     (not (carrier-has-box ?carrier ?box))
-                    ;(free ?agent)
                     (at ?box ?loc)
                     (decrease (curr-carrier-load ?carrier) 1)
         )
