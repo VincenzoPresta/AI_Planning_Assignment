@@ -1,8 +1,8 @@
 (define (domain task1domain)
 
-  (:requirements :strips :typing :universal-preconditions :disjunctive-preconditions :numeric-fluents)
+    (:requirements :strips :typing :universal-preconditions :disjunctive-preconditions :numeric-fluents)
 
-  (:types
+    (:types
     workstation location box content robot content_type carrier
     
     workstation box content agent - locable
@@ -11,7 +11,7 @@
     robot - agent
     volt current - content_type ; Definizione dei tipi di contenuto
     cart - carrier              ; carrier is generic, there can be more carrier type
-  )
+    )
 
     (:predicates
         (at ?objectLoc - locable ?location - location )
@@ -75,6 +75,7 @@
                         (contain ?workstation ?box)
                         (contain ?workstation ?content)
                         (is-type ?content ?type)
+                        (workstation-has-type ?workstation ?type)
 
                         ;(free ?agent)
                         (box-is-empty ?box)
