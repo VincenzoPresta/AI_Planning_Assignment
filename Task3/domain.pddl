@@ -1,6 +1,6 @@
 (define (domain task31domain)
 
-  (:requirements :strips :typing :disjunctive-preconditions)
+  (:requirements :strips :typing :disjunctive-preconditions :durative-actions)
 
   (:types
     workstation location box content robot content_type 
@@ -102,13 +102,12 @@
                 (at ?agent ?location)
                 (is-type ?content ?type)
                 (at ?workstation ?location)
-                (or (at ?box ?loc) (contain ?workstation ?box))
+                (or (at ?box ?location) (contain ?workstation ?box))
             ))
         )
         :effect (and 
             (at start (and 
                 (workstation-has-type ?workstation ?type) ;check
-
             ))
             (at end (and 
                 (not (contain ?box ?content))
@@ -181,7 +180,7 @@
                 (at ?agent ?location)
                 (at ?workstation ?location)
                 (agent-has-carrier ?agent ?carrier)
-                (carrier-has-slot ?carrier -carrier ?slot)
+                (carrier-has-slot ?carrier ?slot)
 
             ))
         )
@@ -209,8 +208,6 @@
             (over all (and 
                 (or (connected ?location1 ?location2) (connected ?location2 ?location1))
             ))
-            (at end (and 
-            ))
         )
         :effect (and 
             (at start (and 
@@ -232,8 +229,8 @@
                 (slot-has-box ?slot ?box)
             ))
             (over all (and 
-                (at ?agent ?loc)
-                (at ?workstation ?loc)
+                (at ?agent ?location)
+                (at ?workstation ?location)
                 (agent-has-carrier ?agent ?carrier)
                 (carrier-has-slot ?carrier ?slot)
             ))
@@ -259,7 +256,7 @@
                 (slot-has-box ?slot ?box)
             ))
             (over all (and 
-                (at ?agent ?loc)
+                (at ?agent ?location)
                 (agent-has-carrier ?agent ?carrier)
                 (carrier-has-slot ?carrier ?slot)
             ))
@@ -270,7 +267,7 @@
                 (free ?slot)
             ))
             (at end (and 
-                (at ?box ?loc)
+                (at ?box ?location)
             ))
         )
     )

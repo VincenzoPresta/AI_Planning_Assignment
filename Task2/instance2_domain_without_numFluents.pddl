@@ -72,7 +72,7 @@
                         (contain ?workstation ?box)
                         (contain ?workstation ?content)
                         (is-type ?content ?type)
-
+            
                         ;(free ?agent)
                         (box-is-empty ?box)
         )                   
@@ -138,8 +138,7 @@
         )
     )
 
-    (:action pick-up-from-location
-        :parameters (?agent - agent ?carrier - carrier ?slot - slot ?box - box ?loc - location)
+    (:action pick-up-from-location        :parameters (?agent - agent ?carrier - carrier ?slot - slot ?box - box ?loc - location)
         :precondition (and 
                             (at ?agent ?loc)
                             (at ?box ?loc)
