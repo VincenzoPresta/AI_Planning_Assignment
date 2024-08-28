@@ -1,9 +1,9 @@
 (define (domain task31domain)
 
-  (:requirements :strips :typing :disjunctive-preconditions :durative-actions)
+  (:requirements :strips :typing :durative-actions)
 
   (:types
-    workstation location box content robot content_type 
+    workstation location box content robot contentType 
 
     carrier slot
     
@@ -11,7 +11,7 @@
     box workstation - container
     content box - containable
     robot - agent
-    volt current - content_type ; Definizione dei tipi di contenuto
+    volt bolt - contenType ; Definizione dei tipi di contenuto
     cart - carrier              ; carrier is generic, there can be more carrier type
   )
 
@@ -20,100 +20,70 @@
         (contain ?container - container ?containable - containable)
         (box-is-empty ?box - box)
         (connected ?loc1 - location ?loc2 - location)
-        (workstation-has-type ?workstation - workstation ?type - content_type) ; Indica di quale tipo di contenuto ha bisogno una workstation
-        (is-type ?content - content ?content_type - content_type); Associa contenuti specifici ai loro tipi
+        (workstation-has-type ?workstation - workstation ?type - contentType) ; Indica di quale tipo di contenuto ha bisogno una workstation
+        (is-type ?content - content ?contentType - contentType); Associa contenuti specifici ai loro tipi
 
         ;modifiche per istanza no. 2
         (agent-has-carrier ?agent - agent ?carrier - carrier)             ;true se agent ha il carrier
-        (carrier-has-slot ?carrier -carrier ?slot - slot)
+        (carrier-has-slot ?carrier - carrier ?slot - slot)
         (slot-has-box ?slot - slot ?box - box)
         (free ?slot - slot)
     )
 
+    ;in questo dominio si suppone che la empty to workstation sia possibile solo se la scatola si trova nella workstation
+    ;è possibile effettuare fill e pickup in parallelo
 
-    ;Converti il dominio definito nel paragrafo 2.2 per utilizzare azioni durative. Scegli durate arbitrarie ma ragionevoli per le diverse azioni.
-    ;Considera la possibilità di eseguire azioni in parallelo quando ciò sarebbe possibile nella realtà. 
-    ;Ad esempio, un agente robotico non può raccogliere diverse scatole contemporaneamente, né raccogliere una scatola e, se è un drone, volare verso una destinazione allo stesso tempo.
-
-
-    ;check se serve la free del robot
-    ;check durate
-    
-    (:durative-action fill_box_from_location
+    (:durative-action fill-box-from-location
         :parameters (?agent - agent ?box - box ?content - content ?loc - location)
         :duration (= ?duration 3)
         :condition (and 
-            (at start (and 
-                (box-is-empty ?box)
-                (at ?content ?loc)                
-            ))
-            (over all (and 
-                (at ?agent ?loc)
-                (at ?box ?loc)
-            ))
+            (at start (box-is-empty ?box))
+            (at start (at ?content ?loc))
+            (over all (at ?agent ?loc))
+            (over all (at ?box ?loc))
         )
         :effect (and 
-            (at start (and 
-                (not (box-is-empty ?box))
-                (not (at ?content ?loc))
-            ))
-            (at end (and 
-                (contain ?box ?content)
-            ))
+            (at start (not (box-is-empty ?box)))
+            (at start (not (at ?content ?loc)))
+            (at end (contain ?box ?content))
         )
     )
 
-    (:durative-action fill_box_from_workstation
-        :parameters (?agent - agent ?box - box ?content - content ?workstation - workstation ?type - content_type ?loc - location)
+    (:durative-action fill-box-from-workstation
+        :parameters (?agent - agent ?box - box ?content - content ?workstation - workstation ?type - contentType ?loc - location)
         :duration (= ?duration 3)
         :condition (and 
-            (at start (and 
-                (box-is-empty ?box)
-                (contain ?workstation ?content)
-                (workstation-has-type ?workstation ?type)  
-            ))
-            (over all (and 
-                (at ?agent ?loc)
-                (at ?workstation ?loc)
-                (contain ?workstation ?box)    
-                (is-type ?content ?type)
-            ))
+            (at start (box-is-empty ?box))
+            (at start (contain ?workstation ?content))
+            (at start (workstation-has-type ?workstation ?type))
+            (over all (at ?agent ?loc))
+            (over all (at ?workstation ?loc))
+            (over all (contain ?workstation ?box))
+            (over all (is-type ?content ?type))
         )
         :effect (and 
-            (at start (and 
-                (not (box-is-empty ?box))
-                (not (contain ?workstation ?content))
-            ))
-            (at end (and 
-                (not (workstation-has-type ?workstation ?type))
-                (contain ?box ?content)
-            ))
+            (at start (not (box-is-empty ?box)))
+            (at start (not (contain ?workstation ?content)))
+            (at end (not (workstation-has-type ?workstation ?type)))
+            (at end (contain ?box ?content))
         )
     )
 
     (:durative-action empty-box-workstation
-        :parameters (?agent - agent ?box - box ?content - content ?type - content_type ?workstation - workstation ?location - location)
+        :parameters (?agent - agent ?box - box ?content - content ?type - contentType ?workstation - workstation ?location - location)
         :duration (= ?duration 3)
         :condition (and 
-            (at start (and 
-                (contain ?box ?content)
-            ))
-            (over all (and 
-                (at ?agent ?location)
-                (is-type ?content ?type)
-                (at ?workstation ?location)
-                (or (at ?box ?location) (contain ?workstation ?box))
-            ))
+            (at start (contain ?box ?content))
+            (over all (at ?agent ?location))
+            (over all (is-type ?content ?type))
+            (over all (at ?workstation ?location))
+            (over all (contain ?workstation ?box))
         )
         :effect (and 
-            (at start (and 
-                (workstation-has-type ?workstation ?type) ;check
-            ))
-            (at end (and 
-                (not (contain ?box ?content))
-                (box-is-empty ?box)
-                (contain ?workstation ?content)
-            ))
+            (at start (not (contain ?box ?content)))
+            (at end (workstation-has-type ?workstation ?type))
+            (at end (box-is-empty ?box))
+            (at end (contain ?workstation ?content))
         )
     )
 
@@ -121,23 +91,14 @@
         :parameters (?agent - agent ?box - box ?content - content ?location - location)
         :duration (= ?duration 3)
         :condition (and 
-            (at start (and 
-                (contain ?box ?content)
-            ))
-            (over all (and 
-                (at ?agent ?location)
-                (at ?box ?location)
-            ))
+            (at start (contain ?box ?content))
+            (over all (at ?agent ?location))
+            (over all (at ?box ?location))
         )
         :effect (and 
-            (at start (and 
-
-            ))
-            (at end (and 
-                (not (contain ?box ?content))
-                (at ?content ?location)
-                (box-is-empty ?box)
-            ))
+            (at start (not (contain ?box ?content)))
+            (at end (at ?content ?location))
+            (at end (box-is-empty ?box))
         )
     )
 
@@ -145,26 +106,17 @@
         :parameters (?agent - agent ?carrier - carrier ?slot - slot ?box - box ?location - location )
         :duration (= ?duration 2)
         :condition (and 
-            (at start (and 
-                (free ?slot)
-                (at ?box ?location)
-            ))
-            (over all (and 
+            (at start (free ?slot))
+            (at start (at ?box ?location))
 
-                (at ?agent ?location)
-                (agent-has-carrier ?agent ?carrier)
-                (carrier-has-slot ?carrier ?slot)
-
-            ))
+            (over all (at ?agent ?location))
+            (over all (agent-has-carrier ?agent ?carrier))
+            (over all (carrier-has-slot ?carrier ?slot))
         )
         :effect (and 
-            (at start (and 
-            ))
-            (at end (and 
-                (not (free ?slot))
-                (not (at ?box ?location ))
-                (slot-has-box ?slot ?box)
-            ))
+            (at start (not (at ?box ?location)))
+            (at start (not (free ?slot)))
+            (at end (slot-has-box ?slot ?box))
         )
     )
 
@@ -172,51 +124,31 @@
         :parameters (?agent - agent ?carrier - carrier ?slot - slot ?box - box ?workstation - workstation ?location - location)
         :duration (= ?duration 2)
         :condition (and 
-            (at start (and 
-                (contain ?workstation ?box)
-                (free ?slot)
-            ))
-            (over all (and 
-                (at ?agent ?location)
-                (at ?workstation ?location)
-                (agent-has-carrier ?agent ?carrier)
-                (carrier-has-slot ?carrier ?slot)
-
-            ))
+            (at start (free ?slot))
+            (at start (contain ?workstation ?box))
+            (over all (at ?workstation ?location))
+            (over all (at ?agent ?location))
+            (over all (agent-has-carrier ?agent ?carrier))
+            (over all (carrier-has-slot ?carrier ?slot))
         )
         :effect (and 
-            (at start (and 
-
-
-            ))
-            (at end (and 
-                (not (contain ?workstation ?box))
-                (not (free ?slot))
-                (slot-has-box ?slot ?box)
-            ))
+            (at start (not (contain ?workstation ?box)))
+            (at start (not (free ?slot)))
+            (at end (slot-has-box ?slot ?box))
         )
     )
     
 
     (:durative-action move
-        :parameters (?agent - agent ?location1 - location ?location2 - location)
+        :parameters (?agent - agent ?from - location ?to - location)
         :duration (= ?duration 5)
         :condition (and 
-            (at start (and 
-                (at ?agent ?location1)
-            ))
-            (over all (and 
-                (or (connected ?location1 ?location2) (connected ?location2 ?location1))
-            ))
+            (at start (at ?agent ?from))
+            (over all (connected ?from ?to))
         )
         :effect (and 
-            (at start (and 
-                (not (at ?agent ?location1))
-
-            ))
-            (at end (and 
-                (at ?agent ?location2)
-            ))
+            (at start (not (at ?agent ?from)))
+            (at end (at ?agent ?to))
         )
     )
 
@@ -225,50 +157,32 @@
         :parameters (?agent - agent ?carrier - carrier ?slot - slot ?box - box ?workstation - workstation ?location - location)
         :duration (= ?duration 2)
         :condition (and 
-            (at start (and 
-                (slot-has-box ?slot ?box)
-            ))
-            (over all (and 
-                (at ?agent ?location)
-                (at ?workstation ?location)
-                (agent-has-carrier ?agent ?carrier)
-                (carrier-has-slot ?carrier ?slot)
-            ))
+            (at start (slot-has-box ?slot ?box))
+            (over all (carrier-has-slot ?carrier ?slot))
+            (over all (agent-has-carrier ?agent ?carrier))
+            (over all (at ?agent ?location))
+            (over all (at ?workstation ?location))
         )
         :effect (and 
-            (at start (and 
-                (not (slot-has-box ?slot ?box))
-                (free ?slot)
-            ))
-            (at end (and 
-                (contain ?workstation ?box)
-
-            ))
+            (at start (not (slot-has-box ?slot ?box)))
+            (at end (free ?slot))
+            (at end (contain ?workstation ?box))
         )
     )
-    
-    
+
     (:durative-action deliver-to-location
         :parameters (?agent - agent ?carrier - carrier ?slot - slot ?box - box ?location - location)
         :duration (= ?duration 2)
         :condition (and 
-            (at start (and 
-                (slot-has-box ?slot ?box)
-            ))
-            (over all (and 
-                (at ?agent ?location)
-                (agent-has-carrier ?agent ?carrier)
-                (carrier-has-slot ?carrier ?slot)
-            ))
+            (at start (slot-has-box ?slot ?box))
+            (over all (at ?agent ?location))
+            (over all (carrier-has-slot ?carrier ?slot))
+            (over all (agent-has-carrier ?agent ?carrier))
         )
         :effect (and 
-            (at start (and 
-                (not (slot-has-box ?slot ?box))
-                (free ?slot)
-            ))
-            (at end (and 
-                (at ?box ?location)
-            ))
+            (at start (not (slot-has-box ?slot ?box)))
+            (at end (free ?slot))
+            (at end (at ?box ?location))
         )
     )
 )
