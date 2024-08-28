@@ -19,7 +19,7 @@
         (at ?objectLoc - locable ?location - location )
         (contain ?container - container ?containable - containable)
         (box-is-empty ?box - box)
-        (connected ?loc1 - location ?loc2 - location)
+        (connected ?location1 - location ?location2 - location)
         (workstation-has-type ?workstation - workstation ?type - content_type) ; Indica di quale tipo di contenuto ha bisogno una workstation
         (is-type ?content - content ?content_type - content_type); Associa contenuti specifici ai loro tipi
 
@@ -35,7 +35,7 @@
     ; 1: ogni agente ha un "carrier" con una capacità massima (può essere diversa per ogni agente)       ;DONE
     ; 2: l'agente può caricare le scatole nel "carrier" fino alla capacità massima
     ; 3: l'agente e le scatole da caricare devono essere nella stessa location
-    ; 4: l'agente può muovere il carrello ad una locazione dove le ws hanno bisogno dei materiali
+    ; 4: l'agente può muovere il carrello ad una locazione dove le workstation hanno bisogno dei materiali
     ; 5: l'agente può scaricare una o più scatole dal "carrier" alla locazione dove si trova
     ; 6: l'agente può continuare a muoversi verso un'altra locazione, scaricare altre scatole senza tornare al warehouse ogni volta
     ; 7: diversi tipi di "carrier" 
@@ -48,27 +48,26 @@
     ;first try: eliminato il predicato free
 
     (:action fill_box_from_location
-        :parameters (?agent - agent ?box - box ?content - content ?loc - location )
+        :parameters (?agent - agent ?box - box ?content - content ?location - location )
         :precondition (and 
-                        (at ?agent ?loc)
-                        (at ?box ?loc)
-                        (at ?content ?loc)
-
+                        (at ?agent ?location )
+                        (at ?box ?location )
+                        (at ?content ?location )
                         ;(free ?agent)
                         (box-is-empty ?box)
         )      
         :effect (and 
                     (not (box-is-empty ?box))
-                    (not (at ?content ?loc))
+                    (not (at ?content ?location ))
                     (contain ?box ?content)
         )
     )
 
     (:action fill_box_from_workstation
-        :parameters (?agent - agent ?box - box ?content - content ?workstation - workstation ?type - content_type ?loc - location)
+        :parameters (?agent - agent ?box - box ?content - content ?workstation - workstation ?type - content_type ?location - location)
         :precondition (and 
-                        (at ?agent ?loc)
-                        (at ?workstation ?loc)
+                        (at ?agent ?location)
+                        (at ?workstation ?location)
                         (contain ?workstation ?box)
                         (contain ?workstation ?content)
                         (is-type ?content ?type)
@@ -85,10 +84,10 @@
     )
 
     ; La box può essere svuotata sia se è nella workstation sia se è nella location
-    (:action empty-box-ws
-        :parameters (?agent - agent ?box - box ?content - content ?content_type - content_type ?workstation - workstation ?loc - location)
+    (:action empty-box-workstation
+        :parameters (?agent - agent ?box - box ?content - content ?content_type - content_type ?workstation - workstation ?location - location)
         :precondition (and 
-                            (at ?agent ?loc)
+                            (at ?agent ?location)
                             (or (at ?box ?loc) (contain ?workstation ?box))
                             (at ?workstation ?loc)
 
@@ -104,11 +103,11 @@
         )
     )
 
-    (:action empty-box-loc
-        :parameters (?agent - agent ?box - box ?content - content ?loc - location)
+    (:action empty-box-location
+        :parameters (?agent - agent ?box - box ?content - content ?location - location)
         :precondition (and 
-                            (at ?agent ?loc)
-                            (at ?box ?loc) 
+                            (at ?agent ?location)
+                            (at ?box ?location) 
         
                             ;(free ?agent)
                             (contain ?box ?content)
@@ -117,15 +116,15 @@
                     (not (contain ?box ?content))
                     (box-is-empty ?box)
 
-                    (at ?content ?loc)
+                    (at ?content ?location)
         )
     )
 
-    (:action pick-up-from-ws
-        :parameters (?agent - agent ?carrier - carrier ?slot - slot ?box - box ?workstation - workstation ?loc - location)
+    (:action pick-up-from-workstation
+        :parameters (?agent - agent ?carrier - carrier ?slot - slot ?box - box ?workstation - workstation ?location - location)
         :precondition (and 
-                    (at ?agent ?loc)
-                    (at ?workstation ?loc)
+                    (at ?agent ?location)
+                    (at ?workstation ?location)
                     (contain ?workstation ?box)
                     (agent-has-carrier ?agent ?carrier)
                     (carrier-has-slot ?carrier ?slot)
@@ -138,39 +137,40 @@
         )
     )
 
-    (:action pick-up-from-location        :parameters (?agent - agent ?carrier - carrier ?slot - slot ?box - box ?loc - location)
+    (:action pick-up-from-location        
+        :parameters (?agent - agent ?carrier - carrier ?slot - slot ?box - box ?location - location)
         :precondition (and 
-                            (at ?agent ?loc)
-                            (at ?box ?loc)
+                            (at ?agent ?location)
+                            (at ?box ?location)
                             (agent-has-carrier ?agent ?carrier)
                             (carrier-has-slot ?carrier ?slot)
                             (free ?slot)
 
         )
         :effect (and 
-                    (not (at ?box ?loc))
+                    (not (at ?box ?location))
                     (not (free ?slot))
                     (slot-has-box ?slot ?box)
         )
     )
 
     (:action move
-        :parameters (?agent - agent ?loc1 - location ?loc2 - location)
+        :parameters (?agent - agent ?location1 - location ?location2 - location)
         :precondition (and 
-                        (or (connected ?loc1 ?loc2) (connected ?loc2 ?loc1))
-                        (at ?agent ?loc1)
+                        (or (connected ?location1 ?location1) (connected ?location1 ?location1))
+                        (at ?agent ?location1)
         )
         :effect (and 
-                    (not (at ?agent ?loc1))
-                    (at ?agent ?loc2)
+                    (not (at ?agent ?location1))
+                    (at ?agent ?location1)
         )
     )
 
-    (:action deliver-to-ws
-        :parameters (?agent - agent ?carrier - carrier ?slot - slot ?box - box ?workstation - workstation ?loc - location)
+    (:action deliver-to-workstation
+        :parameters (?agent - agent ?carrier - carrier ?slot - slot ?box - box ?workstation - workstation ?location - location)
         :precondition (and 
-                            (at ?agent ?loc)
-                            (at ?workstation ?loc)
+                            (at ?agent ?location)
+                            (at ?workstation ?location)
                             
                             (agent-has-carrier ?agent ?carrier)
                             (carrier-has-slot ?carrier ?slot)
@@ -183,10 +183,10 @@
         )
     )
 
-    (:action deliver-to-loc
-        :parameters (?agent - agent ?carrier - carrier ?slot - slot ?box - box ?loc - location)
+    (:action deliver-to-location
+        :parameters (?agent - agent ?carrier - carrier ?slot - slot ?box - box ?location - location)
         :precondition (and 
-                            (at ?agent ?loc)
+                            (at ?agent ?location)
                             (agent-has-carrier ?agent ?carrier)
                             (carrier-has-slot ?carrier ?slot)
                             (slot-has-box ?slot ?box)
