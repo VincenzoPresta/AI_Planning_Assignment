@@ -1,7 +1,7 @@
 (define (problem deliver-volt-content)
   (:domain task22domain)
   (:objects
-      agent1 agent2 - robot
+      agent1 agent2 - agent
       box1 box2 box3 - box
 
       bolt1 - content
@@ -10,12 +10,16 @@
 
       valve1 - content
       valve2 - content
+      valve3 - content
 
-      warehouse loc2 loc3 loc4  - location
+      tool1 - content
+      tool2 - content
 
-      ws1 ws2 ws3 ws4  - workstation
+      warehouse loc2 loc3 loc4 loc5 loc6 - location
 
-      valve bolt - contentType
+      ws1 ws2 ws3 ws4 ws5 ws6 - workstation
+
+      valve bolt tool - contentType
 
       cart1 cart2 - carrier
 
@@ -41,12 +45,19 @@
       (at bolt3 warehouse)
       (at valve1 warehouse)
       (at valve2 warehouse)
+      (at valve3 warehouse)
+      (at tool1 warehouse)
+      (at tool2 warehouse)
       
       ;position of workstations
       (at ws1 loc2)
       (at ws2 loc2)
       (at ws3 loc3)
       (at ws4 loc4)
+      (at ws5 loc5)
+
+      (at ws6 loc6)
+
       
       ; Connessioni tra le location
       (connected warehouse loc2)
@@ -55,13 +66,28 @@
       (connected loc3 warehouse)
       (connected loc3 loc4)
       (connected loc4 loc3)
+      ;per il momento sfrutto l'or per non scrivere tanto
+      (connected warehouse loc5)
+      (connected loc5 warehouse)
+      (connected loc2 loc5)
+      (connected loc5 loc2)
+
+      (connected loc2 loc6)
+      (connected loc6 loc2)
+      (connected loc4 loc6)
+      (connected loc6 loc4)
+
+
  
       ; Tipo dei contenuti
       (is-type valve1 valve)
       (is-type valve2 valve)
+      (is-type valve3 valve)
       (is-type bolt1 bolt)
       (is-type bolt2 bolt)
       (is-type bolt3 bolt)
+      (is-type tool1 tool)
+      (is-type tool2 tool)
  
  
       ;carrier and slot
@@ -85,7 +111,10 @@
       (and
       (workstation-has-type ws2 valve)
       (workstation-has-type ws2 bolt)
-      (workstation-has-type ws4 valve)
+      (workstation-has-type ws3 tool)
+      (workstation-has-type ws6 tool)
+      (workstation-has-type ws4 bolt)
+
       )
   )
 )

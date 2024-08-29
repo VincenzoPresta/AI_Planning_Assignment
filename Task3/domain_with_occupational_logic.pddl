@@ -28,24 +28,31 @@
         (carrier-has-slot ?carrier - carrier ?slot - slot)
         (slot-has-box ?slot - slot ?box - box)
         (free ?slot - slot)
+
+        (libero ?agent - agent)
     )
 
     ;in questo dominio si suppone che la empty to workstation sia possibile solo se la scatola si trova nella workstation
-    ;è possibile effettuare fill e pickup in parallelo
 
     (:durative-action fill-box-from-location
         :parameters (?agent - agent ?box - box ?content - content ?loc - location)
         :duration (= ?duration 3)
         :condition (and 
+            (at start (libero ?agent))
+
             (at start (box-is-empty ?box))
             (at start (at ?content ?loc))
             (over all (at ?agent ?loc))
             (over all (at ?box ?loc))
         )
         :effect (and 
+            (at start (not (libero ?agent)))
+
             (at start (not (box-is-empty ?box)))
             (at start (not (at ?content ?loc)))
             (at end (contain ?box ?content))
+            
+            (at end (libero ?agent))
         )
     )
 
@@ -53,6 +60,8 @@
         :parameters (?agent - agent ?box - box ?content - content ?workstation - workstation ?type - contentType ?loc - location)
         :duration (= ?duration 3)
         :condition (and 
+            (at start (libero ?agent))
+
             (at start (box-is-empty ?box))
             (at start (contain ?workstation ?content))
             (at start (workstation-has-type ?workstation ?type))
@@ -60,12 +69,17 @@
             (over all (at ?workstation ?loc))
             (over all (contain ?workstation ?box))
             (over all (is-type ?content ?type))
+
         )
         :effect (and 
+            (at start (not (libero ?agent)))
+
             (at start (not (box-is-empty ?box)))
             (at start (not (contain ?workstation ?content)))
             (at end (not (workstation-has-type ?workstation ?type)))
             (at end (contain ?box ?content))
+
+            (at end (libero ?agent))
         )
     )
 
@@ -73,17 +87,25 @@
         :parameters (?agent - agent ?box - box ?content - content ?type - contentType ?workstation - workstation ?location - location)
         :duration (= ?duration 3)
         :condition (and 
+            (at start (libero ?agent))
+
             (at start (contain ?box ?content))
             (over all (at ?agent ?location))
             (over all (is-type ?content ?type))
             (over all (at ?workstation ?location))
             (over all (contain ?workstation ?box))
+
+
         )
         :effect (and 
+            (at start (not (libero ?agent)))
+
             (at start (not (contain ?box ?content)))
             (at end (workstation-has-type ?workstation ?type))
             (at end (box-is-empty ?box))
             (at end (contain ?workstation ?content))
+
+            (at end (libero ?agent))
         )
     )
 
@@ -91,14 +113,20 @@
         :parameters (?agent - agent ?box - box ?content - content ?location - location)
         :duration (= ?duration 3)
         :condition (and 
+            (at start (libero ?agent))
+
             (at start (contain ?box ?content))
             (over all (at ?agent ?location))
             (over all (at ?box ?location))
         )
         :effect (and 
+            (at start (not(libero ?agent)))
+
             (at start (not (contain ?box ?content)))
             (at end (at ?content ?location))
             (at end (box-is-empty ?box))
+
+            (at end (libero ?agent))
         )
     )
 
@@ -106,6 +134,8 @@
         :parameters (?agent - agent ?carrier - carrier ?slot - slot ?box - box ?location - location )
         :duration (= ?duration 2)
         :condition (and 
+            (at start (libero ?agent))
+
             (at start (free ?slot))
             (at start (at ?box ?location))
 
@@ -114,9 +144,13 @@
             (over all (carrier-has-slot ?carrier ?slot))
         )
         :effect (and 
+            (at start (not (libero ?agent)))
+
             (at start (not (at ?box ?location)))
             (at start (not (free ?slot)))
             (at end (slot-has-box ?slot ?box))
+
+            (at end (libero ?agent))
         )
     )
 
@@ -124,6 +158,8 @@
         :parameters (?agent - agent ?carrier - carrier ?slot - slot ?box - box ?workstation - workstation ?location - location)
         :duration (= ?duration 2)
         :condition (and 
+            (at start (libero ?agent))
+
             (at start (free ?slot))
             (at start (contain ?workstation ?box))
             (over all (at ?workstation ?location))
@@ -131,10 +167,14 @@
             (over all (agent-has-carrier ?agent ?carrier))
             (over all (carrier-has-slot ?carrier ?slot))
         )
-        :effect (and 
+        :effect (and
+            (at start (not (libero ?agent)))
+
             (at start (not (contain ?workstation ?box)))
             (at start (not (free ?slot)))
             (at end (slot-has-box ?slot ?box))
+
+            (at end (libero ?agent))
         )
     )
     
@@ -143,12 +183,15 @@
         :parameters (?agent - agent ?from - location ?to - location)
         :duration (= ?duration 5)
         :condition (and 
+            (at start (libero ?agent))
             (at start (at ?agent ?from))
             (over all (connected ?from ?to))
         )
-        :effect (and 
+        :effect (and
+            (at start (not (libero ?agent)))
             (at start (not (at ?agent ?from)))
             (at end (at ?agent ?to))
+            (at end (libero ?agent))
         )
     )
 
@@ -157,6 +200,7 @@
         :parameters (?agent - agent ?carrier - carrier ?slot - slot ?box - box ?workstation - workstation ?location - location)
         :duration (= ?duration 2)
         :condition (and 
+            (at start (libero ?agent))
             (at start (slot-has-box ?slot ?box))
             (over all (carrier-has-slot ?carrier ?slot))
             (over all (agent-has-carrier ?agent ?carrier))
@@ -164,9 +208,12 @@
             (over all (at ?workstation ?location))
         )
         :effect (and 
+            (at start (not (libero ?agent)))
             (at start (not (slot-has-box ?slot ?box)))
             (at end (free ?slot))
             (at end (contain ?workstation ?box))
+            (at end (libero ?agent))
+
         )
     )
 
@@ -174,15 +221,36 @@
         :parameters (?agent - agent ?carrier - carrier ?slot - slot ?box - box ?location - location)
         :duration (= ?duration 2)
         :condition (and 
+            (at start (libero ?agent))
             (at start (slot-has-box ?slot ?box))
             (over all (at ?agent ?location))
             (over all (carrier-has-slot ?carrier ?slot))
             (over all (agent-has-carrier ?agent ?carrier))
         )
-        :effect (and 
+        :effect (and
+            (at start (not (libero ?agent)))
             (at start (not (slot-has-box ?slot ?box)))
             (at end (free ?slot))
             (at end (at ?box ?location))
+            (at end (libero ?agent))
+
+        )
+    )
+
+    (:durative-action transfer-loc-to-ws
+        :parameters (?agent - agent ?box - box ?location - location ?workstation - workstation)
+        :duration (= ?duration 1)
+        :condition(and
+            (at start (libero ?agent))
+            (at start (at ?box ?location))
+            (over all (at ?agent ?location))
+            (over all (at ?workstation ?location))
+        )
+        :effect (and
+            (at start(not (libero ?agent)))
+            (at start(not (at ?box ?location)))
+            (at end (contain ?workstation ?box))
+            (at end(libero ?agent))
         )
     )
 )
