@@ -88,8 +88,8 @@
         :parameters (?agent - agent ?box - box ?content - content ?content_type - content_type ?workstation - workstation ?location - location)
         :precondition (and 
                             (at ?agent ?location)
-                            (or (at ?box ?loc) (contain ?workstation ?box))
-                            (at ?workstation ?loc)
+                            (or (at ?box ?location) (contain ?workstation ?box))
+                            (at ?workstation ?location)
 
                             ;(free ?agent)
                             (contain ?box ?content)
@@ -194,7 +194,7 @@
         :effect (and 
                     (not (slot-has-box ?slot ?box))
                     (free ?slot)
-                    (at ?box ?loc)
+                    (at ?box ?location)
         )
     )
 

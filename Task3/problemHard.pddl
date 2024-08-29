@@ -1,5 +1,5 @@
 (define (problem deliver-volt-content)
-  (:domain task22domain)
+  (:domain task31domain)
   (:objects
       agent1 agent2 - robot
       box1 box2 box3 - box

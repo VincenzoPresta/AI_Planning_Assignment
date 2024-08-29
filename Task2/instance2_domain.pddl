@@ -18,7 +18,7 @@
         (contain ?container - container ?containable - containable)
         (box-is-empty ?box - box)
         ;(free ?agent - agent)
-        (connected ?location1 - location ?location1 - location)
+        (connected ?location1 - location ?location2 - location)
         (workstation-has-type ?workstation - workstation ?type - content_type) ; Indica di quale tipo di contenuto ha bisogno una workstation
         (is-type ?content - content ?content_type - content_type); Associa contenuti specifici ai loro tipi
 
