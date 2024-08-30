@@ -30,7 +30,7 @@
         (free ?slot - slot)
     )
 
-    (:action fill_box_from_location
+    (:action fill-box-from-location
         :parameters (?agent - agent ?box - box ?content - content ?loc - location )
         :precondition (and 
                         (at ?agent ?loc)
@@ -47,7 +47,7 @@
         )
     )
 
-    (:action fill_box_from_workstation
+    (:action fill-box-from-workstation
         :parameters (?agent - agent ?box - box ?content - content ?workstation - workstation ?type - contentType ?loc - location)
         :precondition (and 
                         (at ?agent ?loc)
