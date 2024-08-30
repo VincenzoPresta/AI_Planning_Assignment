@@ -18,10 +18,10 @@
         (connected ?loc1 - location ?loc2 - location)
         (workstation-has-type ?workstation - workstation ?contentType - contentType) 
         (is-type ?content - content ?contentType - contentType)
+        (is-empty ?container - container)
         ;Instance no. 2
         (agent-has-carrier ?agent - agent ?carrier - carrier)             
         (carrier-has-slot ?carrier - carrier ?slot - slot)
-        (is-empty ?container - container)
     )
 
     (:action fill-box-from-location
