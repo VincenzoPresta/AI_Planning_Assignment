@@ -35,9 +35,9 @@
       (at box1 warehouse)
       (at box2 warehouse)
       (at box3 warehouse)
-      (box-is-empty box1)
-      (box-is-empty box2)
-      (box-is-empty box3)
+      (is-empty box1)
+      (is-empty box2)
+      (is-empty box3)
       
       ;start supplies
       (at bolt1 warehouse)
@@ -100,11 +100,11 @@
       (carrier-has-slot cart2 slot4)
       (carrier-has-slot cart2 slot5)
 
-      (free slot1)
-      (free slot2)
-      (free slot3)
-      (free slot4)
-      (free slot5)
+      (is-empty slot1)
+      (is-empty slot2)
+      (is-empty slot3)
+      (is-empty slot4)
+      (is-empty slot5)
   )
 
   (:goal
