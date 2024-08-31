@@ -3,8 +3,7 @@
   (:requirements :strips :typing :disjunctive-preconditions)
 
   (:types
-     
-    location agent content-type carrier - object
+    location agent contentType carrier - object
     workstation box content agent - locatable
     workstation box slot - container
     content box - containable
