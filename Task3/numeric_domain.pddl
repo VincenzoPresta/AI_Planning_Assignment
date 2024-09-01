@@ -116,7 +116,7 @@
         :duration (= ?duration 2)
         :condition (and 
             (at start (free ?agent))
-            (at start (< (curr-carrier-load ?carrier)(capacity ?carrier)))
+            (over all (< (curr-carrier-load ?carrier)(capacity ?carrier)))
             (at start (at ?box ?location))
             (over all (at ?agent ?location))
             (over all (agent-has-carrier ?agent ?carrier))
@@ -125,7 +125,7 @@
         :effect (and 
             (at start (not (free ?agent)))
             (at start (not (at ?box ?location)))
-            (at start (increase (curr-carrier-load ?carrier) 1))
+            (at end (increase (curr-carrier-load ?carrier) 1))
             (at end (carrier-has-box ?carrier ?box))
             (at end (free ?agent))
         )
@@ -145,7 +145,7 @@
         :effect (and
             (at start (not (free ?agent)))
             (at start (not (contain ?workstation ?box)))
-            (at start (increase (curr-carrier-load ?carrier) 1))
+            (at end (increase (curr-carrier-load ?carrier) 1))
             (at end (carrier-has-box ?carrier ?box))
             (at end (free ?agent))
         )
