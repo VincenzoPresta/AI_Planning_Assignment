@@ -1,25 +1,15 @@
-All'interno della cartella ws
+Qui è presente solo la cartella source, creare una cartella X, inserire al suo interno la cartella src.
 
-compilare i file presenti dentro source con 
+Aprire un terminale all'interno della cartella X (appena creata), eseguire i seguenti comandi in ordine:
+ - colcon build --symlink-install
+ - install/setup.bash
+ - ros2 launch robotic_planning plansys2_msl.py
 
-colcon build --symlink-install
+Adesso bisogna avviare un secondo terminale all'interno di X/src/robotic_planning ed eseguire:
+ -  ros2 run plansys2_terminal plansys2_terminal <./launch/commands
+Con questo comando plansys2 prenderà istanze, predicati, funzioni e goal del problema ma darà segmentation fault.
+Quindi bisogna avviare nuovamente il terminale con:
+ - ros2 run plansys2_terminal plansys2_terminal
 
-Dopodiché eseguire
-
-source install/setup.bash (Senza di questo non trova i file perché è down)
-
-Per avviare plansys2 e ros
-
-ros2 launch plansys2_simple_example plansys2_simple_example_launch.py
-
-DOPODICHE' BISOGNA APRIRE UN SECONDO TERMINALE
-
-ros2 run plansys2_terminal plansys2_terminal
-
-CONTINUANDO 
-
-source ./launch/commands MA NON FUNZIONA quindi ros2 run plansys2_terminal plansys2_terminal
-
-POI PER ESEGUIRE IL PLAN
-
-run plan-file <percorso assoluto al plan.txt>
+Adesso è possibile lanciare i piani con il seguente comando:
+ - run plan-file ./plans/nomePlan.txt
