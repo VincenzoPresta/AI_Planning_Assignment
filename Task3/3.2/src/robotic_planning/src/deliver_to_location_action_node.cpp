@@ -38,9 +38,9 @@ private:
       std::cout << std::endl;
     }
 
-    std::cout << "\r\e[K" << std::flush;
-    std::cout << "agent "+arguments [0]+ " is delivering "+ 
-            arguments [2]+ " in "+ arguments [1]+" . . . [ " << std::min(100.0, progress_ * 100.0) << "% ] \n " <<
+    
+    std::cout << arguments [0]+ " is delivering "+ 
+            arguments [2]+ " in "+ arguments [1]+" . . . [ " << std::min(100.0, progress_ * 100.0) << "% ]" <<
             std::flush;
   }
 

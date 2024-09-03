@@ -36,10 +36,10 @@ private:
       std::cout << std::endl;
     }
 
-    std::cout << "\r\e[K" << std::flush;
-    std::cout << "Agent "+arguments [0]+ " is filling "+ 
-            arguments [1]+ " in "+ arguments [3] + " with "+
-            arguments [2]+" . . . [ " << std::min(100.0, progress_ * 100.0) << "% ]  " <<
+    
+    
+       std::cout << arguments[0] + " is filling " + arguments [1]+ " in "+ arguments [3] + " with "+
+            arguments [2]+" . . . [ " << std::min(100.0, progress_ * 100.0) << "% ] " <<
             std::flush;
   }
 

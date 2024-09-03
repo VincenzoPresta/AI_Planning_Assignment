@@ -10,11 +10,11 @@
 
 using namespace std::chrono_literals;
 
-class PickUpFromLocation : public plansys2::ActionExecutorClient
+class PickUpFromWorkstation : public plansys2::ActionExecutorClient
 {
 public:
-  PickUpFromLocation()
-  : plansys2::ActionExecutorClient("pick_up_from_location", 1000ms)
+  PickUpFromWorkstation()
+  : plansys2::ActionExecutorClient("pick_up_from_workstation", 1000ms)
   {
     progress_ = 0.0;
   }
@@ -25,18 +25,18 @@ private:
     if (progress_ < 1.0) {
       progress_ += 0.5;
       send_feedback(progress_, "agent "+arguments [0]+ " is picking up "+ 
-            arguments [1]+ " in "+ arguments [2]);
+            arguments [3]+ " in "+ arguments [1]);
     } else {
-      finish(true, progress_, "agent "+arguments [0]+ " picked up "+ 
-            arguments [1]);
+      finish(true, progress_, "agent "+arguments [0]+ "picked up"+ 
+            arguments [3]);
 
       progress_ = 0.0;
       std::cout << std::endl;
     }
 
-    std::cout << "\r\e[K" << std::flush;
-    std::cout << "agent "+arguments [0]+ " is picking up "+ 
-            arguments [1]+ " in "+ arguments [2]+" . . . [ " << std::min(100.0, progress_ * 100.0) << "% ] \n " <<
+    
+    std::cout << arguments [0]+ " is picking up "+ 
+            arguments [3]+ " in "+ arguments [1] +" . . . [ " << std::min(100.0, progress_ * 100.0) << "% ]" <<
             std::flush;
   }
 
@@ -46,9 +46,9 @@ private:
 int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<PickUpFromLocation>();
+  auto node = std::make_shared<PickUpFromWorkstation>();
 
-  node->set_parameter(rclcpp::Parameter("action_name", "pick_up_from_location"));
+  node->set_parameter(rclcpp::Parameter("action_name", "pick_up_from_workstation"));
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
 
   rclcpp::spin(node->get_node_base_interface());
