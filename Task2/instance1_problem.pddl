@@ -1,7 +1,7 @@
-(define (problem deliver-volt-content)
+(define (problem deliver-content)
   (:domain task21domain)
   (:objects
-      agent1 agent2 - agent
+      agent1 - agent
       box1 box2 box3 - box
 
       bolt1 - content
@@ -24,10 +24,10 @@
   )
 
   (:init
-      ;start robot
+      ;start agent
       (at agent1 warehouse)
-      ;(at agent2 warehouse)
-      
+      (free agent1)
+
       ;start box
       (at box1 warehouse)
       (at box2 warehouse)
@@ -52,14 +52,13 @@
       (at ws3 loc1)
       (at ws4 loc2)
       
-      ; Connessioni tra le location
+      ;connections between locations
       (connected warehouse loc1)
       (connected warehouse loc2)
-
       (connected loc1 warehouse)
       (connected loc2 warehouse)
 
-      ; Tipo dei contenuti
+      ;content type
       (is-type valve1 valve)
       (is-type valve2 valve)
       (is-type valve3 valve)
@@ -68,9 +67,7 @@
       (is-type bolt3 bolt)
       (is-type tool1 tool)
       (is-type tool2 tool)
- 
 
-      (free agent1)
   )
 
   (:goal

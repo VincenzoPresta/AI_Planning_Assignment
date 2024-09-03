@@ -1,4 +1,4 @@
-(define (problem istanzatemporale)
+(define (problem deliver-content)
   (:domain task31domain)
   (:objects
       agent1 agent2 - agent
@@ -27,12 +27,13 @@
   )
 
   (:init
-      ;start robot
+      ;start agent
       (at agent1 warehouse)
       (at agent2 warehouse)
-
       (free agent1)
       (free agent2)
+      (agent-has-carrier agent1 cart1)
+      (agent-has-carrier agent2 cart2)
       
       ;start box
       (at box1 warehouse)
@@ -52,37 +53,32 @@
       (at tool1 warehouse)
       (at tool2 warehouse)
       
-      ;position of workstations
+      ;workstations
       (at ws1 loc2)
       (at ws2 loc2)
       (at ws3 loc3)
       (at ws4 loc4)
       (at ws5 loc5)
-
       (at ws6 loc6)
 
       
-      ; Connessioni tra le location
+      ;locations connections
       (connected warehouse loc2)
       (connected loc2 warehouse)
       (connected warehouse loc3)
       (connected loc3 warehouse)
       (connected loc3 loc4)
       (connected loc4 loc3)
-      ;per il momento sfrutto l'or per non scrivere tanto
       (connected warehouse loc5)
       (connected loc5 warehouse)
       (connected loc2 loc5)
       (connected loc5 loc2)
-
       (connected loc2 loc6)
       (connected loc6 loc2)
       (connected loc4 loc6)
       (connected loc6 loc4)
 
-
- 
-      ; Tipo dei contenuti
+      ;conten type
       (is-type valve1 valve)
       (is-type valve2 valve)
       (is-type valve3 valve)
@@ -94,20 +90,17 @@
  
  
       ;carrier and slot
-      (agent-has-carrier agent1 cart1)
-      (agent-has-carrier agent2 cart2)
-
       (carrier-has-slot cart1 slot1)
       (carrier-has-slot cart1 slot2)
       (carrier-has-slot cart2 slot3)
       (carrier-has-slot cart2 slot4)
       (carrier-has-slot cart2 slot5)
-
       (is-empty slot1)
       (is-empty slot2)
       (is-empty slot3)
       (is-empty slot4)
       (is-empty slot5)
+      
   )
 
   (:goal

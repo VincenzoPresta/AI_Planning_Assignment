@@ -23,8 +23,6 @@
         (free ?agent - agent)
     )
 
-    ;Important: temporal planner doesn't support disjunctive precondition so in this domain a box can be emptied in a workstation only if is in it.
-
     (:durative-action fill-box-from-location
         :parameters (?agent - agent ?box - box ?content - content ?location - location)
         :duration (= ?duration 3)
@@ -84,7 +82,8 @@
             (at end (free ?agent))
         )
     )    
-
+    
+    ;a box can be emptied in a workstation only if is in it
     (:durative-action empty-box-workstation
         :parameters (?agent - agent ?box - box ?content - content ?contentType - contentType ?workstation - workstation ?location - location)
         :duration (= ?duration 3)

@@ -1,6 +1,6 @@
 (define (domain task22domainwithfluents)
 
-    (:requirements :strips :typing :numeric-fluents)
+    (:requirements :strips :typing :fluents)
 
     (:types
         location agent contentType carrier - object
@@ -26,8 +26,6 @@
         (curr-carrier-load ?carrier - carrier);current load of the carrier: number of boxes in it
         (capacity ?carrier - carrier )               ;capacity of the carrier
     )
-
-    ;in this version disjunctive-preconditions are not used because the planner used (OPTIC) doesn't support them. 
 
     (:action fill-box-from-location
         :parameters (?agent - agent ?box - box ?content - content ?location - location )

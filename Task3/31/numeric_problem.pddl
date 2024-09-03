@@ -1,4 +1,4 @@
-(define (problem deliver-volt-content)
+(define (problem deliver-content)
   (:domain task31numericdomain)
   (:objects
     agent1 agent2 - agent
@@ -11,24 +11,31 @@
   )
 
   (:init
-      ;Posizione elementi
+      ;start agent
       (at agent1 warehouse)
       (at agent2 warehouse)
-
       (free agent1)
       (free agent2)
+      (agent-has-carrier agent1 cart1)
+      (agent-has-carrier agent2 cart2)
       
+      ;start box
       (at box1 warehouse)
       (at box2 warehouse)
       (at box3 warehouse)
+      (is-empty box1)
+      (is-empty box2)
+      (is-empty box3)
       
+      ;start supplies
       (at valve1 warehouse)
       (at valve2 warehouse)
       (at bolt1 warehouse)
       (at bolt2 warehouse)
       (at tool1 warehouse)
       (at tool2 warehouse)
-
+      
+      ;content type
       (is-type valve1 valve)
       (is-type valve2 valve)
       (is-type valve3 valve)
@@ -37,6 +44,7 @@
       (is-type tool1 tool)
       (is-type tool2 tool)
       
+      ;workstations
       (at ws1 loc1)
       (at ws2 loc2)
       (at ws3 loc1)
@@ -45,27 +53,17 @@
       (at ws6 loc4)
       (at ws7 loc4)
       
+      ;locations connections
       (connected warehouse loc1)
-      ;(connected warehouse loc2)
       (connected warehouse loc3)
       (connected warehouse loc4)
       (connected loc3 loc2)
-      ;(connected loc1 loc4)
-
-      ;(connected loc2 warehouse)
       (connected loc1 warehouse)
       (connected loc3 warehouse)
       (connected loc4 warehouse)
       (connected loc2 loc3)
-      ;(connected loc4 loc1)
 
-      (is-empty box1)
-      (is-empty box2)
-      (is-empty box3)
-
-      (agent-has-carrier agent1 cart1)
-      (agent-has-carrier agent2 cart2)
-
+      ;capacity and load
       (= (capacity cart1) 2)
       (= (capacity cart2) 2)
       (= (curr-carrier-load cart1) 0)
