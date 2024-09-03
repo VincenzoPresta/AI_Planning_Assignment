@@ -7,7 +7,7 @@
     warehouse loc1 loc2 loc3 loc4 - location
     ws1 ws2 ws3 ws4 ws5 ws6 ws7 - workstation
     box1 box2 box3 - box
-    valve1 valve2 valve3 bolt1 bolt2 tool1 tool2 - content
+    valve1 valve2 bolt1 bolt2 tool1 tool2 - content
   )
 
   (:init
@@ -38,7 +38,6 @@
       ;content type
       (is-type valve1 valve)
       (is-type valve2 valve)
-      (is-type valve3 valve)
       (is-type bolt1 bolt)
       (is-type bolt2 bolt)
       (is-type tool1 tool)
