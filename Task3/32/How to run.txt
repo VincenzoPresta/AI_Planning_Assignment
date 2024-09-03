@@ -1,0 +1,25 @@
+All'interno della cartella ws
+
+compilare i file presenti dentro source con 
+
+colcon build --symlink-install
+
+Dopodiché eseguire
+
+source install/setup.bash (Senza di questo non trova i file perché è down)
+
+Per avviare plansys2 e ros
+
+ros2 launch plansys2_simple_example plansys2_simple_example_launch.py
+
+DOPODICHE' BISOGNA APRIRE UN SECONDO TERMINALE
+
+ros2 run plansys2_terminal plansys2_terminal
+
+CONTINUANDO 
+
+source ./launch/commands MA NON FUNZIONA quindi ros2 run plansys2_terminal plansys2_terminal
+
+POI PER ESEGUIRE IL PLAN
+
+run plan-file <percorso assoluto al plan.txt>

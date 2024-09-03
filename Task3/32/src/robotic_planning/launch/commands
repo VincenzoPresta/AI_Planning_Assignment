@@ -1,0 +1,93 @@
+set instance agent1 agent
+set instance agent2 agent
+
+set instance cart1 carrier
+set instance cart2 carrier
+
+set instance valve contenttype
+set instance bolt contenttype
+set instance tool contenttype
+
+set instance warehouse location
+set instance loc1 location
+set instance loc2 location
+set instance loc3 location
+set instance loc4 location
+
+set instance ws1 workstation
+set instance ws2 workstation
+set instance ws3 workstation
+set instance ws4 workstation
+set instance ws5 workstation
+set instance ws6 workstation
+set instance ws7 workstation
+
+set instance box1 box
+set instance box2 box
+set instance box3 box
+
+set instance valve1 content
+set instance valve2 content
+set instance valve3 content
+
+set instance bolt1 content
+set instance bolt2 content
+
+set instance tool1 content
+set instance tool2 content
+
+set predicate (at agent1 warehouse)
+set predicate (at agent2 warehouse)
+set predicate (free agent1)
+set predicate (free agent2)
+set predicate (agent_has_carrier agent1 cart1)
+set predicate (agent_has_carrier agent2 cart2)
+
+set predicate (at box1 warehouse)
+set predicate (at box2 warehouse)
+set predicate (at box3 warehouse)
+set predicate (is_empty box1)
+set predicate (is_empty box2)
+set predicate (is_empty box3)
+
+set predicate (at valve1 warehouse)
+set predicate (at valve2 warehouse)
+set predicate (at valve3 warehouse)
+
+set predicate (at bolt1 warehouse)
+set predicate (at bolt2 warehouse)
+
+set predicate (at tool1 warehouse)
+set predicate (at tool2 warehouse)
+
+set predicate (is_type valve1 valve)
+set predicate (is_type valve2 valve)
+set predicate (is_type valve3 valve)
+set predicate (is_type bolt1 bolt)
+set predicate (is_type bolt2 bolt)
+set predicate (is_type tool1 tool)
+set predicate (is_type tool2 tool)
+
+set predicate (at ws1 loc1)
+set predicate (at ws2 loc2)
+set predicate (at ws3 loc1)
+set predicate (at ws4 loc2)
+set predicate (at ws5 loc3)
+set predicate (at ws6 loc4)
+set predicate (at ws7 loc4)
+
+set predicate (connected warehouse loc1)
+set predicate (connected warehouse loc3)
+set predicate (connected warehouse loc4)
+set predicate (connected loc3 loc2)
+set predicate (connected loc1 warehouse)
+set predicate (connected loc3 warehouse)
+set predicate (connected loc4 warehouse)
+set predicate (connected loc2 loc3)
+
+set function (= (curr_carrier_load cart1) 0)
+set function (= (curr_carrier_load cart2) 0)
+set function (= (capacity cart1) 2)
+set function (= (capacity cart2) 2)
+
+set goal (and (workstation_has_type ws1 bolt) (workstation_has_type ws2 valve) (workstation_has_type ws3 valve) (workstation_has_type ws3 tool) (workstation_has_type ws6 tool) )
