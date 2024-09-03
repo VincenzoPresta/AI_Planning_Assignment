@@ -3,27 +3,25 @@
     (:requirements :strips :typing :disjunctive-preconditions)
 
     (:types
-        location 
-        workstation box content agent - locatable   ;locatable objects
-        workstation box  - container                ;objects that can contains something 
-        content box - containable                   ;objects that can be contained
-        robot - agent                               ;useful for having different type of agent
-        valve bolt tool - contentType               ;useful for remark in modelling
+        location agent contentType - object
+        workstation box content agent - locatable
+        workstation box  - container
+        content box - containable
     )
 
     (:predicates
         (at ?locatable - locatable ?location - location )
         (contain ?container - container ?containable - containable)
-        (is-empty ?container - container)
         (connected ?loc1 - location ?loc2 - location)
         (workstation-has-type ?workstation - workstation ?contentType - contentType) 
         (is-type ?content - content ?contentType - contentType)
+        (is-empty ?box - container)
         (loaded ?agent - agent ?box - box)
         (free ?agent)
     )
+    
     ; Assumptions:
     ; 1 : A loaded robot CAN'T fill or empty a box, it can move or delivery.
-
 
     (:action fill-box-from-location
         :parameters (?agent - agent ?box - box ?content - content ?location - location )
@@ -42,11 +40,11 @@
     )
 
     (:action fill-box-from-workstation
-        :parameters (?agent - agent ?box - box ?content - content ?workstation - workstation ?contentType - contentType ?loc - location)
+        :parameters (?agent - agent ?box - box ?content - content ?workstation - workstation ?contentType - contentType ?location - location)
         :precondition (and
                             (free ?agent)
-                            (at ?agent ?loc)
-                            (at ?workstation ?loc)
+                            (at ?agent ?location)
+                            (at ?workstation ?location)
                             (contain ?workstation ?box)
                             (contain ?workstation ?content)
                             (is-type ?content ?contentType)
@@ -59,26 +57,7 @@
                     (contain ?box ?content)
         )
     )
-
-    ;box can be emptied if it is in location or in workstation
-    (:action empty-box-workstation
-        :parameters (?agent - agent ?box - box ?content - content ?contentType - contentType ?workstation - workstation ?location - location)
-        :precondition (and 
-                            (free ?agent)
-                            (at ?agent ?location)
-                            (or (at ?box ?location) (contain ?workstation ?box))
-                            (at ?workstation ?location)
-                            (contain ?box ?content)
-                            (is-type ?content ?contentType)
-        )
-        :effect (and 
-                    (not (contain ?box ?content))
-                    (is-empty ?box)
-                    (contain ?workstation ?content)
-                    (workstation-has-type ?workstation ?contentType)
-        )
-    )
-
+    
     (:action empty-box-location
         :parameters (?agent - agent ?box - box ?content - content ?location - location)
         :precondition (and 
@@ -94,19 +73,22 @@
         )
     )
 
-
-    (:action pick-up-from-workstation
-        :parameters (?agent - agent ?box - box ?workstation - workstation ?location - location)
+    ;box can be emptied in a workstation only if it is in the workstation
+    (:action empty-box-workstation
+        :parameters (?agent - agent ?box - box ?content - content ?contentType - contentType ?workstation - workstation ?location - location)
         :precondition (and 
                             (free ?agent)
                             (at ?agent ?location)
-                            (at ?workstation ?location)
                             (contain ?workstation ?box)
+                            (at ?workstation ?location)
+                            (contain ?box ?content)
+                            (is-type ?content ?contentType)
         )
         :effect (and 
-                    (not (free ?agent))
-                    (not (contain ?workstation ?box))
-                    (loaded ?agent ?box)
+                    (not (contain ?box ?content))
+                    (is-empty ?box)
+                    (contain ?workstation ?content)
+                    (workstation-has-type ?workstation ?contentType)
         )
     )
 
@@ -124,29 +106,30 @@
         )
     )
 
+    (:action pick-up-from-workstation
+        :parameters (?agent - agent ?box - box ?workstation - workstation ?location - location)
+        :precondition (and 
+                            (free ?agent)
+                            (at ?agent ?location)
+                            (at ?workstation ?location)
+                            (contain ?workstation ?box)
+        )
+        :effect (and 
+                    (not (free ?agent))
+                    (not (contain ?workstation ?box))
+                    (loaded ?agent ?box)
+        )
+    )
+
     (:action move
         :parameters (?agent - agent ?from - location ?to - location)
         :precondition (and 
-                        (or (connected ?from ?to) (connected ?to ?from))
+                        (connected ?from ?to)
                         (at ?agent ?from)
         )
         :effect (and 
                     (not (at ?agent ?from))
                     (at ?agent ?to)
-        )
-    )
-
-    (:action deliver-to-workstation
-        :parameters (?agent - agent ?workstation - workstation ?location - location ?box - box)
-        :precondition (and 
-                            (at ?agent ?location)
-                            (at ?workstation ?location)
-                            (loaded ?agent ?box)
-        )
-        :effect (and 
-                    (not (loaded ?agent ?box))
-                    (free ?agent)
-                    (contain ?workstation ?box)
         )
     )
 
@@ -162,4 +145,20 @@
                     (at ?box ?location)
         )
     )
+    
+    (:action deliver-to-workstation
+        :parameters (?agent - agent ?workstation - workstation ?location - location ?box - box)
+        :precondition (and 
+                            (at ?agent ?location)
+                            (at ?workstation ?location)
+                            (loaded ?agent ?box)
+        )
+        :effect (and 
+                    (not (loaded ?agent ?box))
+                    (free ?agent)
+                    (contain ?workstation ?box)
+        )
+    )
+
+
 )

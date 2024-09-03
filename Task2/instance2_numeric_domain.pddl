@@ -62,7 +62,21 @@
         )
     )
 
-    ;box can be emptied if it is in location or in workstation 
+    (:action empty-box-location
+        :parameters (?agent - agent ?box - box ?content - content ?location - location)
+        :precondition (and 
+                            (at ?agent ?location)
+                            (at ?box ?location) 
+                            (contain ?box ?content)
+        )
+        :effect (and 
+                    (not (contain ?box ?content))
+                    (is-empty ?box)
+                    (at ?content ?location)
+        )
+    )
+
+    ;box can be emptied in a workstation only if it is in the workstation
     (:action empty-box-workstation
         :parameters (?agent - agent ?box - box ?content - content ?contentType - contentType ?workstation - workstation ?location - location)
         :precondition (and 
@@ -80,17 +94,18 @@
         )
     )
 
-    (:action empty-box-location
-        :parameters (?agent - agent ?box - box ?content - content ?location - location)
+    (:action pick-up-from-location
+        :parameters (?agent - agent ?box - box ?location - location ?carrier - carrier)
         :precondition (and 
                             (at ?agent ?location)
-                            (at ?box ?location) 
-                            (contain ?box ?content)
+                            (at ?box ?location)
+                            (agent-has-carrier ?agent ?carrier)
+                            (< (curr-carrier-load ?carrier) (capacity ?carrier))
         )
         :effect (and 
-                    (not (contain ?box ?content))
-                    (is-empty ?box)
-                    (at ?content ?location)
+                    (not (at ?box ?location))
+                    (carrier-has-box ?carrier ?box)
+                    (increase (curr-carrier-load ?carrier) 1)
         )
     )
 
@@ -110,21 +125,6 @@
         )
     )
 
-    (:action pick-up-from-location
-        :parameters (?agent - agent ?box - box ?location - location ?carrier - carrier)
-        :precondition (and 
-                            (at ?agent ?location)
-                            (at ?box ?location)
-                            (agent-has-carrier ?agent ?carrier)
-                            (< (curr-carrier-load ?carrier) (capacity ?carrier))
-        )
-        :effect (and 
-                    (not (at ?box ?location))
-                    (carrier-has-box ?carrier ?box)
-                    (increase (curr-carrier-load ?carrier) 1)
-        )
-    )
-
     (:action move
         :parameters (?agent - agent ?from - location ?to - location)
         :precondition (and 
@@ -134,6 +134,20 @@
         :effect (and 
                     (not (at ?agent ?from))
                     (at ?agent ?to)
+        )
+    )
+
+    (:action deliver-to-location
+        :parameters (?agent - agent ?location - location ?box - box ?carrier - carrier)
+        :precondition (and 
+                            (at ?agent ?location)
+                            (agent-has-carrier ?agent ?carrier)
+                            (carrier-has-box ?carrier ?box)
+        )
+        :effect (and 
+                    (not (carrier-has-box ?carrier ?box))
+                    (at ?box ?location)
+                    (decrease (curr-carrier-load ?carrier) 1)
         )
     )
 
@@ -148,20 +162,6 @@
         :effect (and 
                     (not (carrier-has-box ?carrier ?box))
                     (contain ?workstation ?box)
-                    (decrease (curr-carrier-load ?carrier) 1)
-        )
-    )
-
-    (:action deliver-to-location
-        :parameters (?agent - agent ?location - location ?box - box ?carrier - carrier)
-        :precondition (and 
-                            (at ?agent ?location)
-                            (agent-has-carrier ?agent ?carrier)
-                            (carrier-has-box ?carrier ?box)
-        )
-        :effect (and 
-                    (not (carrier-has-box ?carrier ?box))
-                    (at ?box ?location)
                     (decrease (curr-carrier-load ?carrier) 1)
         )
     )
