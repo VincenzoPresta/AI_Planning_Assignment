@@ -1,4 +1,4 @@
-(define (domain task1domain)
+(define (domain task21domain)
 
     (:requirements :strips :typing)
 
