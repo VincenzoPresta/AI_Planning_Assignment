@@ -1,7 +1,7 @@
 (define (problem deliver-volt-content)
   (:domain task21domain)
   (:objects
-      agent1 agent2 - agent
+      agent1 - agent
       box1 box2 box3 - box
 
       bolt1 - content
@@ -26,7 +26,6 @@
   (:init
       ;start robot
       (at agent1 warehouse)
-      ;(at agent2 warehouse)
       
       ;start box
       (at box1 warehouse)
