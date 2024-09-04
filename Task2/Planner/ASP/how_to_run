@@ -1,0 +1,10 @@
+
+//Compile Files
+javac -d classes -cp lib/pddl4j-4.0.0.jar src/fr/uga/pddl4j/examples/asp/Instance1_ASP/*.java
+javac -d classes -cp lib/pddl4j-4.0.0.jar src/fr/uga/pddl4j/examples/asp/Instance2_ASP/*.java
+
+//Run Files
+java -cp classes:lib/pddl4j-4.0.0.jar fr.uga.pddl4j.examples.asp.Instance1_ASP.ASP PDDL/Istance1/instance1_domain.pddl PDDL/Istance1/<problem_name> -t 1000 > results/<text_name>
+java -cp classes:lib/pddl4j-4.0.0.jar fr.uga.pddl4j.examples.asp.Instance2_ASP.ASP PDDL/Istance2/instance2_domain.pddl PDDL/Istance2/<problem_name> -t 1000 > results/<text_name>
+
+

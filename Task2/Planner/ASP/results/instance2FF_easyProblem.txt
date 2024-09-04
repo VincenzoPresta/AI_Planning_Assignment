@@ -1,0 +1,47 @@
+WARNING: sun.reflect.Reflection.getCallerClass is not supported. This will impact performance.
+
+parsing domain file "instance2_domain.pddl" done successfully
+parsing problem file "istance2_easyProblem.pddl" done successfully
+# WARNING: Unable to get Instrumentation. Dynamic Attach failed. You may add this JAR as -javaagent manually, or supply -Djdk.attach.allowAttachSelf
+# WARNING: Unable to attach Serviceability Agent. You can try again with escalated privileges. Two options: a) use -Djol.tryWithSudo=true to try with sudo; b) echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+
+problem instantiation done successfully (680 actions, 138 fluents)
+
+* Starting ENFORCED_HILL_CLIMBING search with FAST_FORWARD heuristic 
+* ENFORCED_HILL_CLIMBING search succeeded
+
+found plan as follows:
+
+00: (      fill-box-from-location agent1 box1 valve1 warehouse) [0]
+01: (  pick-up-from-location agent1 box1 warehouse cart1 slot1) [0]
+02: (       fill-box-from-location agent1 box2 bolt1 warehouse) [0]
+03: (       fill-box-from-location agent1 box3 tool1 warehouse) [0]
+04: (  pick-up-from-location agent1 box2 warehouse cart1 slot2) [0]
+05: (  pick-up-from-location agent2 box3 warehouse cart2 slot3) [0]
+06: (                               move agent2 warehouse loc2) [0]
+07: (  deliver-to-workstation agent2 ws4 loc2 box3 cart2 slot3) [0]
+08: (    empty-box-workstation agent2 box3 tool1 tool ws4 loc2) [0]
+09: (                               move agent1 warehouse loc1) [0]
+10: (  deliver-to-workstation agent1 ws3 loc1 box1 cart1 slot1) [0]
+11: (  empty-box-workstation agent1 box1 valve1 valve ws3 loc1) [0]
+12: (pick-up-from-workstation agent1 ws3 loc1 box1 cart1 slot1) [0]
+13: (  deliver-to-workstation agent1 ws1 loc1 box2 cart1 slot2) [0]
+14: (    empty-box-workstation agent1 box2 bolt1 bolt ws1 loc1) [0]
+15: (                               move agent1 loc1 warehouse) [0]
+16: (    deliver-to-location agent1 warehouse box1 cart1 slot1) [0]
+17: (       fill-box-from-location agent1 box1 bolt2 warehouse) [0]
+18: (  pick-up-from-location agent1 box1 warehouse cart1 slot1) [0]
+19: (                               move agent1 warehouse loc2) [0]
+20: (  deliver-to-workstation agent1 ws2 loc2 box1 cart1 slot1) [0]
+21: (    empty-box-workstation agent1 box1 bolt2 bolt ws2 loc2) [0]
+
+time spent:       0.04 seconds parsing 
+                  0.18 seconds encoding 
+                  0.40 seconds searching
+                  0.62 seconds total time
+
+memory used:      2.40 MBytes for problem representation
+                  0.00 MBytes for searching
+                  2.40 MBytes total
+
+

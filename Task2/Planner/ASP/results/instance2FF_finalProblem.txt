@@ -1,0 +1,81 @@
+WARNING: sun.reflect.Reflection.getCallerClass is not supported. This will impact performance.
+
+parsing domain file "instance2_domain.pddl" done successfully
+parsing problem file "istance2_FinalProblem.pddl" done successfully
+# WARNING: Unable to get Instrumentation. Dynamic Attach failed. You may add this JAR as -javaagent manually, or supply -Djdk.attach.allowAttachSelf
+# WARNING: Unable to attach Serviceability Agent. You can try again with escalated privileges. Two options: a) use -Djol.tryWithSudo=true to try with sudo; b) echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+
+problem instantiation done successfully (1312 actions, 219 fluents)
+
+* Starting ENFORCED_HILL_CLIMBING search with FAST_FORWARD heuristic 
+* ENFORCED_HILL_CLIMBING search succeeded
+
+found plan as follows:
+
+00: (       fill-box-from-location agent1 box1 bolt1 warehouse) [0]
+01: (  pick-up-from-location agent1 box1 warehouse cart1 slot1) [0]
+02: (                               move agent1 warehouse loc1) [0]
+03: (  deliver-to-workstation agent1 ws1 loc1 box1 cart1 slot1) [0]
+04: (    empty-box-workstation agent1 box1 bolt1 bolt ws1 loc1) [0]
+05: (      fill-box-from-location agent2 box2 valve1 warehouse) [0]
+06: (       fill-box-from-location agent2 box3 tool1 warehouse) [0]
+07: (  pick-up-from-location agent2 box2 warehouse cart2 slot3) [0]
+08: (  pick-up-from-location agent2 box3 warehouse cart2 slot4) [0]
+09: (pick-up-from-workstation agent1 ws1 loc1 box1 cart1 slot1) [0]
+10: (                               move agent2 warehouse loc3) [0]
+11: (                                    move agent2 loc3 loc2) [0]
+12: (  deliver-to-workstation agent2 ws2 loc2 box2 cart2 slot3) [0]
+13: (  empty-box-workstation agent2 box2 valve1 valve ws2 loc2) [0]
+14: (                               move agent1 loc1 warehouse) [0]
+15: (                               move agent1 warehouse loc4) [0]
+16: (                                    move agent2 loc2 loc3) [0]
+17: (                               move agent2 loc3 warehouse) [0]
+18: (                               move agent1 loc4 warehouse) [0]
+19: (                               move agent2 warehouse loc4) [0]
+20: (  deliver-to-workstation agent2 ws6 loc4 box3 cart2 slot4) [0]
+21: (    empty-box-workstation agent2 box3 tool1 tool ws6 loc4) [0]
+22: (    deliver-to-location agent1 warehouse box1 cart1 slot1) [0]
+23: (       fill-box-from-location agent1 box1 tool2 warehouse) [0]
+24: (  pick-up-from-location agent1 box1 warehouse cart1 slot1) [0]
+25: (                               move agent1 warehouse loc1) [0]
+26: (  deliver-to-workstation agent1 ws3 loc1 box1 cart1 slot1) [0]
+27: (    empty-box-workstation agent1 box1 tool2 tool ws3 loc1) [0]
+28: (pick-up-from-workstation agent1 ws3 loc1 box1 cart1 slot1) [0]
+29: (                               move agent1 loc1 warehouse) [0]
+30: (    deliver-to-location agent1 warehouse box1 cart1 slot1) [0]
+31: (      fill-box-from-location agent1 box1 valve2 warehouse) [0]
+32: (  pick-up-from-location agent1 box1 warehouse cart1 slot1) [0]
+33: (                               move agent1 warehouse loc1) [0]
+34: (  deliver-to-workstation agent1 ws3 loc1 box1 cart1 slot1) [0]
+35: (  empty-box-workstation agent1 box1 valve2 valve ws3 loc1) [0]
+
+time spent:       0.04 seconds parsing 
+                  0.28 seconds encoding 
+                  1.04 seconds searching
+                  1.36 seconds total time
+
+memory used:      4.53 MBytes for problem representation
+                  0.00 MBytes for searching
+                  4.53 MBytes total
+
+
+WARNING: sun.reflect.Reflection.getCallerClass is not supported. This will impact performance.
+
+parsing domain file "instance2_domain.pddl" done successfully
+parsing problem file "istance2_FinalProblem.pddl" done successfully
+# WARNING: Unable to get Instrumentation. Dynamic Attach failed. You may add this JAR as -javaagent manually, or supply -Djdk.attach.allowAttachSelf
+# WARNING: Unable to attach Serviceability Agent. You can try again with escalated privileges. Two options: a) use -Djol.tryWithSudo=true to try with sudo; b) echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+
+problem instantiation done successfully (1312 actions, 219 fluents)
+
+* Starting ASTAR search with FAST_FORWARD heuristic 
+WARNING: sun.reflect.Reflection.getCallerClass is not supported. This will impact performance.
+
+parsing domain file "instance2_domain.pddl" done successfully
+parsing problem file "istance2_FinalProblem.pddl" done successfully
+# WARNING: Unable to get Instrumentation. Dynamic Attach failed. You may add this JAR as -javaagent manually, or supply -Djdk.attach.allowAttachSelf
+# WARNING: Unable to attach Serviceability Agent. You can try again with escalated privileges. Two options: a) use -Djol.tryWithSudo=true to try with sudo; b) echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+
+problem instantiation done successfully (1312 actions, 219 fluents)
+
+* Starting ASTAR search with FAST_FORWARD heuristic 
